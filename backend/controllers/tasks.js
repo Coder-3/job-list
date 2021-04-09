@@ -8,7 +8,7 @@ tasksRouter.get('/', async (request, response) => {
 })
 
 tasksRouter.post('/', async (request, response) => {
-  const body = request
+  const body = request.body
 
   const task = new Task({
     jobNumber: body.jobNumber,

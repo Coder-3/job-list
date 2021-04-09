@@ -4,38 +4,15 @@ import TaskForm from './components/TaskForm'
 import taskService from './services/tasks'
 
 const App = () => {
-  const [tasks, setTasks] = useState([
-    {
-      jobNumber: 'adk124',
-      jobKind: 'webd',
-      timeStart: '12:99',
-      timeEnd: '13L888',
-      date: 'mm/dsaf'
-    },
-    {
-      jobNumber: 'adk124',
-      jobKind: 'webd',
-      timeStart: '12:99',
-      timeEnd: '13L888',
-      date: 'mm/dsaf'
-    },
-    {
-      jobNumber: 'adk124',
-      jobKind: 'webd',
-      timeStart: '12:99',
-      timeEnd: '13L888',
-      date: 'mm/dsaf'
-    }
-  ])
-  
+  const [tasks, setTasks] = useState([])
 
-  // useEffect(() => {
-  //   taskService
-  //     .getAll()
-  //     .then(initialTasks => {
-  //         setTasks(initialTasks)
-  //     })
-  // }, [])
+  useEffect(() => {
+    taskService
+      .getAll()
+      .then(initialTasks => {
+          setTasks(initialTasks)
+      })
+  }, [])
 
   const addTask = (taskObject) => {
     taskService
@@ -45,45 +22,31 @@ const App = () => {
       })
   }
 
+  const updateTask = (id, change) => {
+    const task = tasks.find(t => t.id === id)
+    const changedTask = {...task, change}
+
+    taskService
+      .update()
+  }
+
   const taskForm = () => (
     <TaskForm createTask={addTask} />
   )
 
-  // const tasksToShow = () => (
-  //   tasks.map(task => {
-  //     <tr className="border-b border-gray-200 hover:bg-gray-100">
-  //       <JobNumber jobNumber={task.jobNumber} />
-  //       <JobKind jobKind={task.jobKind} />
-  //       <TimeStart timeStart={task.timeStart} />
-  //       <TimeEnd timeEnd={task.timeEnd} />
-  //       <Date date={task.date} />
-  //     </tr>
-  //   })
-  // )
-
-  const testing = [
-    {
-      jobNumber: 'adk124',
-      jobKind: 'webd',
-      timeStart: '12:99',
-      timeEnd: '13L888',
-      date: 'mm/dsaf'
-    },
-    {
-      jobNumber: 'adk124',
-      jobKind: 'webd',
-      timeStart: '12:99',
-      timeEnd: '13L888',
-      date: 'mm/dsaf'
-    },
-    {
-      jobNumber: 'adk124',
-      jobKind: 'webd',
-      timeStart: '12:99',
-      timeEnd: '13L888',
-      date: 'mm/dsaf'
-    }
-  ]
+  const jobs = () => (
+    tasks.map(task => 
+      <Job
+      key={task.id}
+      jobNumber={task.jobNumber}
+      jobKind={task.jobKind}
+      timeStart={task.timeStart}
+      timeEnd={task.timeEnd}
+      date={task.date}
+      updateTask={updateTask}
+      /> 
+    )
+  )
 
   return (
     <div className="overflow-x-auto">
@@ -102,16 +65,7 @@ const App = () => {
                 </tr>
               </thead>
               <tbody className="text-gray-600 text-sm font-light">
-                {testing.map(task =>
-                  <Job
-                    key={task.jobNumber}
-                    jobNumber={task.jobNumber}
-                    jobKind={task.jobKind}
-                    timeStart={task.timeStart}
-                    timeEnd={task.timeEnd}
-                    date={task.date}
-                  />
-                )}
+                {jobs()}
               </tbody>
             </table>
           </div>

@@ -69,7 +69,7 @@ const TaskForm = ({ createTask }) => {
         </tr>
           </tbody>
         </table>
-        
+        <button type="submit">Submit</button>
       </form>
     </>
   )

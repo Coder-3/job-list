@@ -1,5 +1,5 @@
-import React from 'react'
-import axios from 'axios'
+import React, { useState } from 'react'
+import taskService from '../services/tasks'
 
 const JobNumber = ({ jobNumber }) => {
   return (
@@ -14,11 +14,20 @@ const JobNumber = ({ jobNumber }) => {
 }
 
 const JobKind = ({ jobKind }) => {
+  // const [jobKind, setJobKind] = useState('')
+
+  // const handleJobKindChange = (event) => {
+  //   event.preventDefault()
+
+  //   taskService
+  //     .update()
+  // }
   return (
     <td className="py-3 px-6 text-left whitespace-nowrap">
       <div className="flex items-center">
         <div className="mr-2">
       </div>
+      {/* <input type="text" onBlur={}>{jobKind}</p> */}
       <p>{jobKind}</p>
       </div>
     </td>
