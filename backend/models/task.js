@@ -2,10 +2,11 @@ const mongoose = require('mongoose')
 
 const taskSchema = new mongoose.Schema({
   jobNumber: String,
-  jobKind: String,
-  timeStart: String,
-  timeEnd: String,
-  date: String
+  dueDate: String,
+  hours: Number,
+  assignee: String,
+  description: String,
+  status: String
 })
 
 taskSchema.set('toJSON', {
