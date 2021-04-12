@@ -13,7 +13,7 @@ tasksRouter.post('/', async (request, response) => {
   const task = new Task({
     jobNumber: body.jobNumber,
     dueDate: body.dueDate,
-    hours: body.hours,
+    maxHours: body.maxHours,
     assignee: body.assignee,
     description: body.description,
     status: body.status
@@ -35,7 +35,7 @@ tasksRouter.put('/:id', async (request, response) => {
   const task = {
     jobNumber: body.jobNumber,
     dueDate: body.dueDate,
-    hours: body.hours,
+    maxHours: body.maxHours,
     assignee: body.assignee,
     description: body.description,
     status: body.status

@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const taskSchema = new mongoose.Schema({
   jobNumber: String,
   dueDate: String,
-  hours: Number,
+  maxHours: Number,
   assignee: String,
   description: String,
   status: String
