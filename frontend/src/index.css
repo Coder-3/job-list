@@ -15,3 +15,19 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.container {
+  display: flex;
+  align-items: center;
+  margin-top: 1em;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.container > table {
+  width: 100%;
+}
+
+.container > table, th, td {
+  border: 1px solid darkgray;
+}
