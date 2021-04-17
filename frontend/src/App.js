@@ -1,6 +1,76 @@
 import React, { useState, useEffect } from 'react'
 import jobService from './services/jobs'
 
+const JobForm = ({ type, id, updatedJob }) => {
+  const [jobNumber, setJobNumber] = useState('')
+  const [dueDate, setDueDate] = useState('')
+  const [maxHours, setMaxHours] = useState('')
+  const [assignee, setAssignee] = useState('')
+  const [description, setDescription] = useState('')
+  const [status, setStatus] = useState('')
+
+  if (type === null) {
+    return null
+  } else if (type === 'edit') {
+    setJobNumber(updatedJob.jobNumber)
+    setDueDate(updatedJob.dueDate)
+    setMaxHours(updatedJob.dueDate)
+    setAssignee(updatedJob.assignee)
+    setDescription(updatedJob.description)
+    setStatus(updatedJob.status)
+  }
+
+  const clearState = () => {
+    setJobNumber('')
+    setDueDate('')
+    setMaxHours('')
+    setAssignee('')
+    setDescription('')
+    setStatus('')
+    
+    return null
+  }
+
+  const handleJob = (event) => {
+    event.preventDefault()
+
+    const jobObject = {
+      jobNumber: jobNumber,
+      dueDate: dueDate,
+      maxHours: maxHours,
+      assignee: assignee,
+      description: description,
+      status: status
+    }
+
+    if (type === 'add') {
+      jobService
+        .create(jobObject)
+        .then(returnedJob => {
+          clearState()
+      })
+    } else if (type === 'edit') {
+      jobService
+        .update(id, jobObject)
+        .then(returnedJob => {
+          clearState()
+        })
+    }
+  }
+
+  return (
+    <form onSubmit={handleJob} className="form">
+      <input type="text" className="bg-gray-200 border-2 border-gray-300 bg-gray-100 mx-1 rounded-lg focus:border-gray-700" value={jobNumber} onChange={(event) => setJobNumber(event.target.value)}/>
+      <input type="text" className="bg-gray-200 border-2 border-gray-300 bg-gray-100 mx-1 rounded-lg focus:border-gray-700" value={dueDate} onChange={(event) => setDueDate(event.target.value)}/>
+      <input type="text" className="bg-gray-200 border-2 border-gray-300 bg-gray-100 mx-1 rounded-lg focus:border-gray-700" value={maxHours} onChange={(event) => setMaxHours(event.target.value)}/>
+      <input type="text" className="bg-gray-200 border-2 border-gray-300 bg-gray-100 mx-1 rounded-lg focus:border-gray-700" value={assignee} onChange={(event) => setAssignee(event.target.value)}/>
+      <input type="text" className="bg-gray-200 border-2 border-gray-300 bg-gray-100 mx-1 rounded-lg focus:border-gray-700" value={description} onChange={(event) => setDescription(event.target.value)}/>
+      <input type="text" className="bg-gray-200 border-2 border-gray-300 bg-gray-100 mx-1 mr-4 rounded-lg focus:border-gray-700" value={status} onChange={(event) => setStatus(event.target.value)}/>
+      <button type="submit" className="px-4 py-2 text-sm font-semibold tracking-wider border-2 border-gray-300 rounded hover:bg-gray-200 text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-300">Submit</button>
+    </form>
+  )
+}
+
 const Notification = ({ message }) => {
   if (message === null) {
     return null
@@ -18,7 +88,7 @@ const Notification = ({ message }) => {
   )
 }
 
-const Job = ({ jobNumber, dueDate, maxHours, assignee, description, status, deleteJob, editJob }) => {
+const Job = ({ jobNumber, dueDate, maxHours, assignee, description, status, editJob, deleteJob }) => {
   return (
     <tr>
       <td>{jobNumber}</td>
@@ -54,6 +124,7 @@ const App = () => {
   const [description, setDescription] = useState('')
   const [status, setStatus] = useState('')
   const [message, setMessage] = useState(null)
+  const [formType, setFormType] = useState(null)
 
   useEffect(() => {
     jobService
@@ -63,7 +134,7 @@ const App = () => {
       })
   }, [])
 
-  const addJob = (event) => {
+  const handleJob = (event) => {
     event.preventDefault()
     
     const jobObject = {
@@ -85,11 +156,6 @@ const App = () => {
         setAssignee('')
         setDescription('')
         setStatus('')
-        
-        setMessage(`Successfully added ${jobObject.jobNumber}`)
-        setTimeout(() => {
-          setMessage(null)
-        }, 5000)
       })
 
       
@@ -107,31 +173,30 @@ const App = () => {
       })
   }
 
-  const editJob = (id, updatedJob) => {
-    console.log(updatedJob)
+  const editJob = (id, job) => {
+    setFormType('edit')
 
-    setJobNumber(updatedJob.jobNumber)
-
-    // jobService
-    //   .update(id, updatedJob)
+    return (
+      <JobForm 
+        type={formType} 
+        jobNumber={job.jobNumber} 
+        dueDate={job.dueDate} 
+        maxHours={job.maxHours} 
+        assignee={job.assignee} 
+        description={job.description} 
+        status={job.status} 
+      />
+    )
   }
 
-  const addJobForm = () => (
-    <form onSubmit={addJob} className="form">
-      <input type="text" className="bg-gray-200 border-2 border-gray-300 bg-gray-100 mx-1 rounded-lg focus:border-gray-700" value={jobNumber} onChange={(event) => setJobNumber(event.target.value)}/>
-      <input type="text" className="bg-gray-200 border-2 border-gray-300 bg-gray-100 mx-1 rounded-lg focus:border-gray-700" value={dueDate} onChange={(event) => setDueDate(event.target.value)}/>
-      <input type="text" className="bg-gray-200 border-2 border-gray-300 bg-gray-100 mx-1 rounded-lg focus:border-gray-700" value={maxHours} onChange={(event) => setMaxHours(event.target.value)}/>
-      <input type="text" className="bg-gray-200 border-2 border-gray-300 bg-gray-100 mx-1 rounded-lg focus:border-gray-700" value={assignee} onChange={(event) => setAssignee(event.target.value)}/>
-      <input type="text" className="bg-gray-200 border-2 border-gray-300 bg-gray-100 mx-1 rounded-lg focus:border-gray-700" value={description} onChange={(event) => setDescription(event.target.value)}/>
-      <input type="text" className="bg-gray-200 border-2 border-gray-300 bg-gray-100 mx-1 mr-4 rounded-lg focus:border-gray-700" value={status} onChange={(event) => setStatus(event.target.value)}/>
-      <button type="submit" className="px-4 py-2 text-sm font-semibold tracking-wider border-2 border-gray-300 rounded hover:bg-gray-200 text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-300">Submit</button>
-    </form>
-  )
+  const addJob = () => {
+    setFormType('add')
+  }
 
   return (
     <>
       <div className="container">
-        {addJobForm()}
+        <button onClick={addJob}>Add Job</button>
       </div>
       <Notification message={message} />
       <div className="container">
@@ -159,6 +224,7 @@ const App = () => {
                 status={job.status}
                 deleteJob={() => deleteJob(job.id)}
                 editJob={() => editJob(job.id, job)}
+                addJob={addJob}
               />
             )}
           </tbody>
