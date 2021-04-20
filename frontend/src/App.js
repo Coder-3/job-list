@@ -40,7 +40,8 @@ const JobForm = ({ formType, job, updateJobList, closeForm }) => {
         updateJobList()
         closeForm()
       })
-    } else if (formType === 'edit') {jobService
+    } else if (formType === 'edit') {
+      jobService
       .update(job.id, jobObject)
       .then(returnedJob => {
         clearState()
@@ -59,7 +60,7 @@ const JobForm = ({ formType, job, updateJobList, closeForm }) => {
       <input type="text" className="bg-gray-200 border-2 border-gray-300 bg-gray-100 mx-1 rounded-lg focus:border-gray-700" value={description} onChange={(event) => setDescription(event.target.value)}/>
       <input type="text" className="bg-gray-200 border-2 border-gray-300 bg-gray-100 mx-1 mr-4 rounded-lg focus:border-gray-700" value={status} onChange={(event) => setStatus(event.target.value)}/>
       <button type="submit" className="px-4 py-2 text-sm font-semibold tracking-wider border-2 border-gray-300 rounded hover:bg-gray-200 text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-300 mr-2">Submit</button>
-      <button onClick={() => {clearState()}} className="px-4 py-2 text-sm font-semibold tracking-wider border-2 border-gray-300 rounded hover:bg-gray-200 text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-300">Cancel</button>
+      <button onClick={() => closeForm()} className="px-4 py-2 text-sm font-semibold tracking-wider border-2 border-gray-300 rounded hover:bg-gray-200 text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-300">Cancel</button>
     </form>
   )
 }
