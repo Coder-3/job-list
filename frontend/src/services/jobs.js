@@ -6,6 +6,11 @@ const getAll = () => {
   return request.then(response => response.data)
 }
 
+const getTask = (id) => {
+  const request = axios.get(`${baseUrl}/${id}`)
+  return request.then(response => response.data)
+}
+
 const create = async newObject => {
   const response = await axios.post(baseUrl, newObject)
   return response.data
@@ -21,4 +26,4 @@ const update = (id, objectPart) => {
   return request.then(response => response.data)
 }
 
-export default { getAll, create, remove, update }
+export default { getAll, getTask, create, remove, update }
