@@ -1,5 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { Component, useState, useEffect } from 'react'
 import jobService from './services/jobs'
+import Select from 'react-select'
+
+// Todo: add labels to the form, make assignee multi select and allow to filter by assignee
 
 const JobForm = ({ formType, job, updateJobList, closeForm }) => {
   const [jobNumber, setJobNumber] = useState(job.jobNumber)
@@ -95,8 +98,17 @@ const Job = ({ jobNumber, dueDate, maxHours, assignee, description, status, edit
 const App = () => {
   const [jobs, setJobs] = useState([])
   const [job, setJob] = useState(null)
+  const [isButtonHidden, setIsButtonHidden] = useState(false)
   const [showForm, setShowForm] = useState(false)
   const [formType, setFormType] = useState('')
+
+  const teamMembers = [
+    { value: 'all', label: 'All' },
+    { value: 'cedric', label: 'Cédric' },
+    { value: 'dora', label: 'Dora' },
+    { value: 'luke', label: 'Luke' },
+    { value: 'vera', label: 'Vera' }
+  ]
 
   const getJobList = () => {
     jobService
@@ -114,13 +126,17 @@ const App = () => {
     getJobList()
   }
 
+  const closeForm = () => {
+    setShowForm(false)
+    setIsButtonHidden(false)
+  }
   const editJob = (job) => {
     if (showForm === false) {
       return null
     }
 
     return (
-      <JobForm formType={formType} job={job} updateJobList={updateJobList} closeForm={() => setShowForm(false)} />
+      <JobForm formType={formType} job={job} updateJobList={updateJobList} closeForm={closeForm} />
     )
   }
 
@@ -135,20 +151,24 @@ const App = () => {
   const showAddForm = () => {
     setFormType('add')
     setJob({})
+    setIsButtonHidden(true)
     setShowForm(true)
+    setIsButtonHidden(true)
   }
 
   const showEditForm = (job) => {
     setFormType('edit')
     setJob(job)
+    setIsButtonHidden(true)
     setShowForm(true)
+    setIsButtonHidden(true)
   }
 
   return (
     <>
       <div className="container">
         {showForm ? editJob(job) : null}
-        <button onClick={() => showAddForm()} className="px-4 py-2 text-sm font-semibold tracking-wider border-2 border-gray-300 rounded hover:bg-gray-200 text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-300">Add Job</button>
+        <button onClick={() => showAddForm()} hidden={isButtonHidden} className="px-4 py-2 text-sm font-semibold tracking-wider border-2 border-gray-300 rounded hover:bg-gray-200 text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-300">Add Job</button>
       </div>
       {/* <Notification message={message} /> */}
       <div className="container">
@@ -158,7 +178,11 @@ const App = () => {
               <th>Job Number</th>
               <th>Due Date</th>
               <th>Max Hours</th>
-              <th>Assignee</th>
+              <Select
+              defaultValue={teamMembers[0]}
+              isMulti
+              options={teamMembers}
+              />
               <th>Job Name</th>
               <th>Status</th>
               <th>Actions</th>
