@@ -2,8 +2,6 @@ import React, { Component, useState, useEffect } from 'react'
 import jobService from './services/jobs'
 import Select from 'react-select'
 
-// Todo: add labels to the form, make assignee multi select and allow to filter by assignee
-
 const JobForm = ({ formType, job, updateJobList, closeForm }) => {
   const [jobNumber, setJobNumber] = useState(job.jobNumber)
   const [dueDate, setDueDate] = useState(job.dueDate)
@@ -66,35 +64,83 @@ const JobForm = ({ formType, job, updateJobList, closeForm }) => {
   }
 
   return (
-    <form onSubmit={handleJob} className="form">
-      <input type="text" placeholder="Job Number" className="bg-gray-200 border-2 border-gray-300 bg-gray-100 mx-1 rounded-lg focus:border-gray-700" value={jobNumber} onChange={(event) => setJobNumber(event.target.value)}/>
-      <input type="text" placeholder="Due Date" className="bg-gray-200 border-2 border-gray-300 bg-gray-100 mx-1 rounded-lg focus:border-gray-700" value={dueDate} onChange={(event) => setDueDate(event.target.value)}/>
-      <input type="text" placeholder="Max Hours" className="bg-gray-200 border-2 border-gray-300 bg-gray-100 mx-1 rounded-lg focus:border-gray-700" value={maxHours} onChange={(event) => setMaxHours(event.target.value)}/>
-      <Select
-      options={teamMembers}
-      onChange={setSelectedTeamMembers}
-      placeholder='Assignee'
-      isMulti
-      isSearchable
-      />
-      <input type="text" placeholder="Description" className="bg-gray-200 border-2 border-gray-300 bg-gray-100 mx-1 rounded-lg focus:border-gray-700" value={description} onChange={(event) => setDescription(event.target.value)}/>
-      <input type="text" placeholder="Status" className="bg-gray-200 border-2 border-gray-300 bg-gray-100 mx-1 mr-4 rounded-lg focus:border-gray-700" value={status} onChange={(event) => setStatus(event.target.value)}/>
-      <button type="submit" className="px-4 py-2 text-sm font-semibold tracking-wider border-2 border-gray-300 rounded hover:bg-gray-200 text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-300 mr-2">Submit</button>
-      <button onClick={() => closeForm()} className="px-4 py-2 text-sm font-semibold tracking-wider border-2 border-gray-300 rounded hover:bg-gray-200 text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-300">Cancel</button>
-    </form>
+    <>
+      <div class="min-h-screen bg-gray-100 flex flex-col justify-center">
+        <div class="relative py-3 sm:max-w-xl sm:mx-auto">
+          <div class="relative px-4 py-10 bg-white mx-8 md:mx-0 shadow rounded-3xl sm:p-10">
+            <div class="max-w-md mx-auto">
+              <div class="flex items-center space-x-5">
+                <div class="h-14 w-14 bg-yellow-200 rounded-full flex flex-shrink-0 justify-center items-center text-yellow-500 text-2xl font-mono">i</div>
+                <div class="block pl-2 pt-2 font-semibold text-xl self-start text-gray-700">
+                  <h2 class="leading-relaxed">Job</h2>
+                </div>
+              </div>
+              <div class="divide-y divide-gray-200">
+                <div class="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
+                  <div class="flex items-center space-x-4">
+                    <div class="flex flex-col">
+                      <label class="leading-loose">Job Number</label>
+                      <input type="text" onChange={(event) => setJobNumber(event.target.value)} class="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" />
+                    </div>
+                    <div class="flex items-center space-x-4">
+                      <div class="flex flex-col">
+                        <label class="leading-loose">Due Date</label>
+                        <div class="relative focus-within:text-gray-600 text-gray-400">
+                          <input onChange={(event) => setDueDate(event.target.value)} type="text" class="pr-4 pl-10 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" placeholder="25/02/2020" />
+                          <div class="absolute left-3 top-2">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="flex flex-col">
+                      <label class="leading-loose">Max Hours</label>
+                      <input type="text" onChange={(event) => setMaxHours(event.target.value)} class="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" />
+                    </div>
+                  </div>
+                  <div class="flex flex-col">
+                    <label class="leading-loose">Assignee</label>
+                    <Select
+                    options={teamMembers}
+                    onChange={setSelectedTeamMembers}
+                    isMulti
+                    isSearchable
+                    /> 
+                  </div>
+                  <div class="flex flex-col">
+                    <label class="leading-loose">Description</label>
+                    <input type="text" onChange={(event) => setDescription(event.target.value)} class="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" />
+                  </div>
+                  <div class="flex flex-col">
+                    <label class="leading-loose">Status</label>
+                    <input type="text" onChange={(event) => setStatus(event.target.value)} class="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" />
+                  </div>
+                </div>
+                <div class="pt-4 flex items-center space-x-4">
+                    <button onClick={() => closeForm()} class="flex justify-center items-center w-full text-gray-900 px-4 py-3 rounded-md focus:outline-none">
+                      <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg> Cancel
+                    </button>
+                    <button onClick={handleJob} class="bg-blue-500 flex justify-center items-center w-full text-white px-4 py-3 rounded-md focus:outline-none">Submit</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
   )
 }
 
 const Job = ({ jobNumber, dueDate, maxHours, assignee, description, status, editJob, deleteJob }) => {
   return (
     <tr>
-      <td>{jobNumber}</td>
-      <td>{dueDate}</td>
-      <td>{maxHours}</td>
-      <td>{assignee}</td>
-      <td>{description}</td>
-      <td>{status}</td>
-      <td>
+      <td className="py-3 px-6 text-left whitespace-nowrap">{jobNumber}</td>
+      <td className="py-3 px-6 text-left whitespace-nowrap">{dueDate}</td>
+      <td className="py-3 px-6 text-left whitespace-nowrap">{maxHours}</td>
+      <td className="py-3 px-6 text-left whitespace-nowrap">{assignee}</td>
+      <td className="py-3 px-6 text-left whitespace-nowrap">{description}</td>
+      <td className="py-3 px-6 text-left whitespace-nowrap">{status}</td>
+      <td className="border-b hover:bg-gray-100">
         <div className="flex item-center justify-center">
           <div className="w-4 mr-2 transform hover:text-purple-500 hover:scale-110" onClick={editJob}>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -208,49 +254,65 @@ const App = () => {
 
   return (
     <>
-      <div className="container">
-        {showForm ? editJob(job) : null}
-        <button onClick={() => showAddForm()} hidden={isButtonHidden} className="px-4 py-2 text-sm font-semibold tracking-wider border-2 border-gray-300 rounded hover:bg-gray-200 text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-300">Add Job</button>
-      </div>
+      <nav class="bg-white shadow">
+       <div class="mx-auto px-6 py-3 md:flex md:justify-between md:items-center">
+          <div class="flex justify-between items-center">
+            <div>
+              <p class="text-gray-800 text-xl font-bold md:text-2xl hover:text-gray-700">HBK</p>
+            </div>
+          </div>
+          <div class="md:flex items-center">
+            <div class="flex flex-col md:flex-row md:mx-6">
+              <a class="my-1 text-sm text-gray-700 font-medium hover:text-indigo-500 md:mx-4 md:my-0" onClick={() => showAddForm()} hidden={isButtonHidden}>Add Job</a>
+            </div>
+          </div>
+        </div>
+      </nav>
+      {showForm ? editJob(job) : null}
       {/* <Notification message={message} /> */}
-      <div className="container">
-        <table>
-          <thead>
-            <tr>
-              <th>Job Number</th>
-              <th>Due Date</th>
-              <th>Max Hours</th>
-              <Select
-              defaultValue={teamMembers[0]}
-              options={teamMembers}
-              onChange={setSelectedTeamMembers}
-              placeholder='Assignee'
-              isMulti
-              isSearchable
-              />
-              <th>Description</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filterJobsByAssignee().map(job => 
-              <Job
-              key={job.id}
-              jobId = {job.id}
-              jobNumber={job.jobNumber}
-              dueDate={job.dueDate}
-              maxHours={job.maxHours}
-              assignee={`${job.assignee}`}
-              description={job.description}
-              status={job.status}
-              deleteJob={() => deleteJob(job.id)}
-              editJob={() => showEditForm(job)}
-              />
-            )}
-          </tbody>
-        </table>
-      </div>
+      <div class="overflow-x-auto">
+        <div class="min-w-screen pt-12 flex items-center justify-center font-sans overflow-hidden">
+            <div class="w-full lg:w-5/6">
+                <div class="bg-white shadow-md rounded my-6"></div>
+                <table className="min-w-max w-full table-auto">
+                  <thead className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                    <tr>
+                      <th>Job Number</th>
+                      <th>Due Date</th>
+                      <th>Max Hours</th>
+                      <Select
+                      defaultValue={teamMembers[0]}
+                      options={teamMembers}
+                      onChange={setSelectedTeamMembers}
+                      placeholder='Assignee'
+                      isMulti
+                      isSearchable
+                      />
+                      <th>Description</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="ext-gray-600 text-sm font-light">
+                    {filterJobsByAssignee().map(job => 
+                      <Job
+                      key={job.id}
+                      jobId = {job.id}
+                      jobNumber={job.jobNumber}
+                      dueDate={job.dueDate}
+                      maxHours={job.maxHours}
+                      assignee={`${job.assignee}`}
+                      description={job.description}
+                      status={job.status}
+                      deleteJob={() => deleteJob(job.id)}
+                      editJob={() => showEditForm(job)}
+                      />
+                    )}
+                  </tbody>
+                </table>
+            </div>
+          </div>
+        </div>
     </>
   )
 }
