@@ -11,6 +11,15 @@ const JobForm = ({ formType, job, updateJobList, closeForm }) => {
   const [assignee, setAssignee] = useState(job.assignee)
   const [description, setDescription] = useState(job.description)
   const [status, setStatus] = useState(job.status)
+  const [selectedTeamMembers, setSelectedTeamMembers] = useState([{value: 'all'}])
+
+  const teamMembers = [
+    { value: 'all', label: 'All' },
+    { value: 'cedric', label: 'Cédric' },
+    { value: 'dora', label: 'Dora' },
+    { value: 'luke', label: 'Luke' },
+    { value: 'vera', label: 'Vera' }
+  ]
 
   const clearState = () => {
     setJobNumber('')
@@ -30,10 +39,12 @@ const JobForm = ({ formType, job, updateJobList, closeForm }) => {
       jobNumber: jobNumber,
       dueDate: dueDate,
       maxHours: maxHours,
-      assignee: assignee,
+      assignee: selectedTeamMembers,
       description: description,
       status: status
     }
+
+    console.log(jobObject)
 
     if (formType === 'add') {
       jobService
@@ -56,12 +67,18 @@ const JobForm = ({ formType, job, updateJobList, closeForm }) => {
 
   return (
     <form onSubmit={handleJob} className="form">
-      <input type="text" className="bg-gray-200 border-2 border-gray-300 bg-gray-100 mx-1 rounded-lg focus:border-gray-700" value={jobNumber} onChange={(event) => setJobNumber(event.target.value)}/>
-      <input type="text" className="bg-gray-200 border-2 border-gray-300 bg-gray-100 mx-1 rounded-lg focus:border-gray-700" value={dueDate} onChange={(event) => setDueDate(event.target.value)}/>
-      <input type="text" className="bg-gray-200 border-2 border-gray-300 bg-gray-100 mx-1 rounded-lg focus:border-gray-700" value={maxHours} onChange={(event) => setMaxHours(event.target.value)}/>
-      <input type="text" className="bg-gray-200 border-2 border-gray-300 bg-gray-100 mx-1 rounded-lg focus:border-gray-700" value={assignee} onChange={(event) => setAssignee(event.target.value)}/>
-      <input type="text" className="bg-gray-200 border-2 border-gray-300 bg-gray-100 mx-1 rounded-lg focus:border-gray-700" value={description} onChange={(event) => setDescription(event.target.value)}/>
-      <input type="text" className="bg-gray-200 border-2 border-gray-300 bg-gray-100 mx-1 mr-4 rounded-lg focus:border-gray-700" value={status} onChange={(event) => setStatus(event.target.value)}/>
+      <input type="text" placeholder="Job Number" className="bg-gray-200 border-2 border-gray-300 bg-gray-100 mx-1 rounded-lg focus:border-gray-700" value={jobNumber} onChange={(event) => setJobNumber(event.target.value)}/>
+      <input type="text" placeholder="Due Date" className="bg-gray-200 border-2 border-gray-300 bg-gray-100 mx-1 rounded-lg focus:border-gray-700" value={dueDate} onChange={(event) => setDueDate(event.target.value)}/>
+      <input type="text" placeholder="Max Hours" className="bg-gray-200 border-2 border-gray-300 bg-gray-100 mx-1 rounded-lg focus:border-gray-700" value={maxHours} onChange={(event) => setMaxHours(event.target.value)}/>
+      <Select
+      options={teamMembers}
+      onChange={setSelectedTeamMembers}
+      placeholder='Assignee'
+      isMulti
+      isSearchable
+      />
+      <input type="text" placeholder="Description" className="bg-gray-200 border-2 border-gray-300 bg-gray-100 mx-1 rounded-lg focus:border-gray-700" value={description} onChange={(event) => setDescription(event.target.value)}/>
+      <input type="text" placeholder="Status" className="bg-gray-200 border-2 border-gray-300 bg-gray-100 mx-1 mr-4 rounded-lg focus:border-gray-700" value={status} onChange={(event) => setStatus(event.target.value)}/>
       <button type="submit" className="px-4 py-2 text-sm font-semibold tracking-wider border-2 border-gray-300 rounded hover:bg-gray-200 text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-300 mr-2">Submit</button>
       <button onClick={() => closeForm()} className="px-4 py-2 text-sm font-semibold tracking-wider border-2 border-gray-300 rounded hover:bg-gray-200 text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-300">Cancel</button>
     </form>
@@ -101,6 +118,7 @@ const App = () => {
   const [isButtonHidden, setIsButtonHidden] = useState(false)
   const [showForm, setShowForm] = useState(false)
   const [formType, setFormType] = useState('')
+  const [selectedTeamMembers, setSelectedTeamMembers] = useState([{label: 'All'}])
 
   const teamMembers = [
     { value: 'all', label: 'All' },
@@ -114,13 +132,37 @@ const App = () => {
     jobService
       .getAll()
       .then(initialJobs => {
-        setJobs(initialJobs)
+        const eachJob = initialJobs.map(job => {
+          const jobObject = {
+            id: job.id,
+            jobNumber: job.jobNumber,
+            dueDate: job.dueDate,
+            maxHours: job.maxHours,
+            assignee: job.assignee.map(eachAssignee => eachAssignee.label),
+            description: job.description,
+            status: job.status
+          }
+          
+          return jobObject
+        })
+        
+        setJobs(eachJob)
       })
   }
 
   useEffect(() => {
     getJobList()
   }, [])
+
+  const filterJobsByAssignee = () => {
+    const selectedTeamMemberValues = selectedTeamMembers.map(teamMember => teamMember.label)
+
+    if(selectedTeamMemberValues.includes('All')) {
+      return jobs
+    } else {
+      return jobs.filter(job => job.assignee.some(eachAssignee => selectedTeamMemberValues.includes(eachAssignee)))
+    }
+  }
 
   const updateJobList = () => {
     getJobList()
@@ -180,23 +222,26 @@ const App = () => {
               <th>Max Hours</th>
               <Select
               defaultValue={teamMembers[0]}
-              isMulti
               options={teamMembers}
+              onChange={setSelectedTeamMembers}
+              placeholder='Assignee'
+              isMulti
+              isSearchable
               />
-              <th>Job Name</th>
+              <th>Description</th>
               <th>Status</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {jobs.map(job => 
+            {filterJobsByAssignee().map(job => 
               <Job
               key={job.id}
               jobId = {job.id}
               jobNumber={job.jobNumber}
               dueDate={job.dueDate}
               maxHours={job.maxHours}
-              assignee={job.assignee}
+              assignee={`${job.assignee}`}
               description={job.description}
               status={job.status}
               deleteJob={() => deleteJob(job.id)}

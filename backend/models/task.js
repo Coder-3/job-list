@@ -4,7 +4,7 @@ const taskSchema = new mongoose.Schema({
   jobNumber: String,
   dueDate: String,
   maxHours: Number,
-  assignee: String,
+  assignee: [],
   description: String,
   status: String
 })
