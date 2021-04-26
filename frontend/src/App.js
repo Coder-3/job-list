@@ -30,8 +30,10 @@ const JobForm = ({ formType, job, updateJobList, closeForm }) => {
   ]
 
   const initialAssignees = () => {
-    console.log('this is running')
-    return assignee.some(eachAssignee => teamMembers.includes(eachAssignee))
+    // const assignees = [
+    //   { value: ''}
+    // ]
+    // return assignee.some(eachAssignee => teamMembers.includes(eachAssignee))
   }
 
   const clearState = () => {
