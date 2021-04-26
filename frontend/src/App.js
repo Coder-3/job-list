@@ -9,10 +9,8 @@ const JobForm = ({ formType, job, updateJobList, closeForm }) => {
   const [maxHours, setMaxHours] = useState(job.maxHours)
   const [assignee, setAssignee] = useState(job.assignee)
   const [description, setDescription] = useState(job.description)
-  const [status, setStatus] = useState(job.status)
   const [selectedTeamMembers, setSelectedTeamMembers] = useState([{value: 'all'}])
-  const [selectedStatus, setSelectedStatus] = useState([{value: 'toStart'}])
-
+  const [selectedStatus, setSelectedStatus] = useState(job.status)
 
   const teamMembers = [
     { value: 'all', label: 'All' },
@@ -30,10 +28,7 @@ const JobForm = ({ formType, job, updateJobList, closeForm }) => {
   ]
 
   const initialAssignees = () => {
-    // const assignees = [
-    //   { value: ''}
-    // ]
-    // return assignee.some(eachAssignee => teamMembers.includes(eachAssignee))
+    return teamMembers.filter(teamMember => assignee.includes(` ${teamMember.label}`))
   }
 
   const clearState = () => {
@@ -42,13 +37,20 @@ const JobForm = ({ formType, job, updateJobList, closeForm }) => {
     setMaxHours('')
     setAssignee('')
     setDescription('')
-    setStatus('')
     
     return null
   }
 
   const handleJob = (event) => {
     event.preventDefault()
+    
+    let statusInArray = []
+
+    if (selectedStatus instanceof Array) {
+      statusInArray = selectedStatus
+    } else {
+      statusInArray = new Array(selectedStatus)
+    }
 
     const jobObject = {
       jobNumber: jobNumber,
@@ -57,7 +59,7 @@ const JobForm = ({ formType, job, updateJobList, closeForm }) => {
       maxHours: maxHours,
       assignee: selectedTeamMembers,
       description: description,
-      status: selectedStatus
+      status: statusInArray
     }
 
     if (formType === 'add') {
@@ -133,7 +135,7 @@ const JobForm = ({ formType, job, updateJobList, closeForm }) => {
                       <label className="leading-loose">Status</label>
                       <Select
                       options={statusOptions}
-                      defaultValue={status}
+                      defaultValue={selectedStatus}
                       onChange={setSelectedStatus}
                       isSearchable
                       />
