@@ -91,6 +91,7 @@ const JobForm = ({ formType, job, updateJobList, closeForm }) => {
   const testDate = (theDate) => {
     console.log(theDate.toString().split(' ').slice(0, 3).join(' '))
     setDueDate(theDate)
+    console.log()
   }
 
   return (
