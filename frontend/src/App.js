@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react'
+import Modal from 'react-modal'
 import jobService from './services/jobs'
 import Select from 'react-select'
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
 
 const JobForm = ({ formType, job, updateJobList, closeForm }) => {
   const [jobNumber, setJobNumber] = useState(job.jobNumber)
@@ -28,7 +31,11 @@ const JobForm = ({ formType, job, updateJobList, closeForm }) => {
   ]
 
   const initialAssignees = () => {
-    return teamMembers.filter(teamMember => assignee.includes(` ${teamMember.label}`))
+    if (assignee) {
+      return teamMembers.filter(teamMember => assignee.includes(` ${teamMember.label}`))
+    } else {
+      return null
+    }
   }
 
   const clearState = () => {
@@ -81,76 +88,88 @@ const JobForm = ({ formType, job, updateJobList, closeForm }) => {
     }
   }
 
+  const testDate = (theDate) => {
+    console.log(theDate.toString().split(' ').slice(0, 3).join(' '))
+    setDueDate(theDate)
+  }
+
   return (
     <>
-      <div className="pt-12 bg-white flex flex-col justify-center">
-        <div className="relative py-3 sm:max-w-xl sm:mx-auto">
-          <div className="relative bg-gray-200 px-4 py-10 bg-white mx-8 md:mx-0 shadow rounded-3xl sm:p-10">
-            <div className="max-w-md mx-auto">
-              <div className="flex items-center space-x-5">
-                <div className="h-14 w-14 bg-yellow-200 rounded-full flex flex-shrink-0 justify-center items-center text-yellow-500 text-2xl font-mono">i</div>
-                <div className="block pl-2 pt-2 font-semibold text-xl self-start text-gray-700">
-                  <h2 className="leading-relaxed">Job</h2>
-                </div>
-              </div>
-              <div className="divide-y divide-gray-200">
-                <div className="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
-                  <div className="flex items-center space-x-4">
-                    <div className="flex flex-col">
-                      <label className="leading-loose">Job Number</label>
-                      <input type="text" value={jobNumber} onChange={(event) => setJobNumber(event.target.value)} className="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" />
-                    </div>
-                    <div className="flex flex-col">
-                      <label className="leading-loose">Job Link</label>
-                      <input type="text" value={jobLink} placeholder="https://..." onChange={(event) => setJobLink(event.target.value)} className="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" />
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-4">
-                    <div className="flex flex-col">
-                      <label className="leading-loose">Due Date</label>
-                      <div className="relative focus-within:text-gray-600 text-gray-400">
-                        <input value={dueDate} onChange={(event) => setDueDate(event.target.value)} type="text" className="pl-10 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" placeholder="25/02/2020" />
-                        <div className="absolute left-3 top-2">
-                          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                        </div>
+      <div className="job-form-container">
+        <div className="job-form-backdrop">
+          <div className="job-form-content">
+            <div className="pt-12 bg-white flex flex-col justify-center">
+              <div className="relative py-3 sm:max-w-xl sm:mx-auto">
+                <div className="relative bg-gray-200 px-4 py-10 bg-white mx-8 md:mx-0 shadow rounded-3xl sm:p-10">
+                  <div className="max-w-md mx-auto">
+                    <div className="flex items-center space-x-5">
+                      <div className="h-14 w-14 bg-yellow-200 rounded-full flex flex-shrink-0 justify-center items-center text-yellow-500 text-2xl font-mono">i</div>
+                      <div className="block pl-2 pt-2 font-semibold text-xl self-start text-gray-700">
+                        <h2 className="leading-relaxed">Job</h2>
                       </div>
                     </div>
-                    <div className="flex flex-col">
-                      <label className="leading-loose">Max Hours</label>
-                      <input type="text" value={maxHours} onChange={(event) => setMaxHours(event.target.value)} className="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" />
+                    <div className="divide-y divide-gray-200">
+                      <div className="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
+                        <div className="flex items-center space-x-4">
+                          <div className="flex flex-col">
+                            <label className="leading-loose">Job Number</label>
+                            <input type="text" value={jobNumber} onChange={(event) => setJobNumber(event.target.value)} className="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" />
+                          </div>
+                          <div className="flex flex-col">
+                            <label className="leading-loose">Job Link</label>
+                            <input type="text" value={jobLink} placeholder="https://..." onChange={(event) => setJobLink(event.target.value)} className="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" />
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-4">
+                          <div className="flex flex-col">
+                            <label className="leading-loose">Due Date</label>
+                            <div className="relative focus-within:text-gray-600 text-gray-400">
+                              <input value={dueDate} onChange={(event) => setDueDate(event.target.value)} type="text" className="pl-10 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" placeholder="25/02/2020" />
+                              <DatePicker selected={dueDate} onChange={date => testDate(date)} />
+                              <div className="absolute left-3 top-2">
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="flex flex-col">
+                            <label className="leading-loose">Max Hours</label>
+                            <input type="text" value={maxHours} onChange={(event) => setMaxHours(event.target.value)} className="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" />
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-4">
+                          <div className="flex flex-col w-1/2">
+                            <label className="leading-loose">Assignee</label>
+                            <Select
+                            options={teamMembers}
+                            defaultValue={initialAssignees()}
+                            onChange={setSelectedTeamMembers}
+                            isMulti
+                            isSearchable
+                            /> 
+                          </div>
+                          <div className="flex flex-col w-1/2">
+                            <label className="leading-loose">Status</label>
+                            <Select
+                            options={statusOptions}
+                            defaultValue={selectedStatus}
+                            onChange={setSelectedStatus}
+                            isSearchable
+                            />
+                          </div>
+                        </div>
+                        <div className="flex flex-col">
+                          <label className="leading-loose">Description</label>
+                          <input type="text" value={description} onChange={(event) => setDescription(event.target.value)} className="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" />
+                        </div>
+                      </div>
+                      <div className="pt-4 flex items-center space-x-4">
+                          <button onClick={() => closeForm()} className="flex justify-center items-center w-full text-gray-900 px-4 py-3 rounded-md focus:outline-none">
+                            <svg className="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg> Cancel
+                          </button>
+                          <button onClick={handleJob} className="bg-blue-500 flex justify-center items-center w-full text-white px-4 py-3 rounded-md focus:outline-none">Submit</button>
+                      </div>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-4">
-                    <div className="flex flex-col w-1/2">
-                      <label className="leading-loose">Assignee</label>
-                      <Select
-                      options={teamMembers}
-                      defaultValue={initialAssignees()}
-                      onChange={setSelectedTeamMembers}
-                      isMulti
-                      isSearchable
-                      /> 
-                    </div>
-                    <div className="flex flex-col w-1/2">
-                      <label className="leading-loose">Status</label>
-                      <Select
-                      options={statusOptions}
-                      defaultValue={selectedStatus}
-                      onChange={setSelectedStatus}
-                      isSearchable
-                      />
-                    </div>
-                  </div>
-                  <div className="flex flex-col">
-                    <label className="leading-loose">Description</label>
-                    <input type="text" value={description} onChange={(event) => setDescription(event.target.value)} className="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" />
-                  </div>
-                </div>
-                <div className="pt-4 flex items-center space-x-4">
-                    <button onClick={() => closeForm()} className="flex justify-center items-center w-full text-gray-900 px-4 py-3 rounded-md focus:outline-none">
-                      <svg className="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg> Cancel
-                    </button>
-                    <button onClick={handleJob} className="bg-blue-500 flex justify-center items-center w-full text-white px-4 py-3 rounded-md focus:outline-none">Submit</button>
                 </div>
               </div>
             </div>
@@ -280,7 +299,7 @@ const App = () => {
   return (
     <>
       <nav className="bg-gray-200 shadow">
-       <div className="mx-auto px-6 py-3 md:flex md:justify-between md:items-center">
+        <div className="mx-auto px-6 py-3 md:flex md:justify-between md:items-center">
           <div className="flex justify-between items-center">
             <div>
               <p className="text-gray-800 text-xl font-bold md:text-2xl hover:text-gray-700">HBK Job List</p>
@@ -293,6 +312,7 @@ const App = () => {
           </div>
         </div>
       </nav>
+
       {showForm ? editJob(job) : null}
       {/* <Notification message={message} /> */}
       <div className="min-w-screen bg-white pt-12 flex items-center justify-center font-sans">
