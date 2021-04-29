@@ -12,7 +12,6 @@ const JobForm = ({ formType, job, updateJobList, closeForm }) => {
   const [maxHours, setMaxHours] = useState(job.maxHours)
   const [assignee, setAssignee] = useState(job.assignee)
   const [description, setDescription] = useState(job.description)
-  const [selectedTeamMembers, setSelectedTeamMembers] = useState([{value: 'all'}])
   const [selectedStatus, setSelectedStatus] = useState(job.status)
 
   const teamMembers = [
