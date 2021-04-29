@@ -10,7 +10,7 @@ The job list web application is a digitised version of HBK's daily job list. It 
 
 ## Installation
 
-1. `git clone <this_url> && cd <repo_name>
+1. `git clone <this_url> && cd <repo_name>`
 2. `cd backend`
 3. `npm install`
 4. `vim .env`
