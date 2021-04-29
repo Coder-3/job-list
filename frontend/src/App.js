@@ -64,7 +64,7 @@ const JobForm = ({ formType, job, updateJobList, closeForm }) => {
       jobLink: jobLink,
       dueDate: dueDate,
       maxHours: maxHours,
-      assignee: selectedTeamMembers,
+      assignee: teamMembers.filter(teamMember => assignee.includes(` ${teamMember.label}`)),
       description: description,
       status: statusInArray
     }
@@ -145,7 +145,7 @@ const JobForm = ({ formType, job, updateJobList, closeForm }) => {
                             <Select
                             options={teamMembers}
                             defaultValue={initialAssignees()}
-                            onChange={setSelectedTeamMembers}
+                            onChange={setAssignee}
                             isMulti
                             isSearchable
                             /> 
