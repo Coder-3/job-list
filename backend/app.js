@@ -24,6 +24,8 @@ app.use(cors())
 app.use(express.json())
 app.use(middleware.requestLogger)
 
+app.use(express.static('build'))
+
 app.use('/api/people', peopleRouter)
 app.use('/api/tasks', tasksRouter)
 
