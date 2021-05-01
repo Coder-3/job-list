@@ -5,22 +5,14 @@ import Select from 'react-select'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 
-const JobForm = ({ formType, job, updateJobList, closeForm }) => {
+const JobForm = ({ formType, job, updateJobList, closeForm, teamMembers }) => {
   const [jobNumber, setJobNumber] = useState(job.jobNumber)
   const [jobLink, setJobLink] = useState(job.jobLink)
   const [dueDate, setDueDate] = useState(job.dueDate)
   const [maxHours, setMaxHours] = useState(job.maxHours)
-  const [assignee, setAssignee] = useState(job.assignee)
+  const [assignee, setAssignee] = useState(job.assignee ? teamMembers.filter(teamMember => job.assignee.includes(` ${teamMember.label}`)) : null)
   const [description, setDescription] = useState(job.description)
   const [selectedStatus, setSelectedStatus] = useState(job.status)
-
-  const teamMembers = [
-    { value: 'all', label: 'All' },
-    { value: 'cedric', label: 'Cédric' },
-    { value: 'dora', label: 'Dora' },
-    { value: 'luke', label: 'Luke' },
-    { value: 'vera', label: 'Vera' }
-  ]
 
   const statusOptions = [
     { value: 'toStart', label: 'To Start' },
@@ -28,14 +20,6 @@ const JobForm = ({ formType, job, updateJobList, closeForm }) => {
     { value: 'blocked', label: 'Blocked' },
     { value: 'completed', label: 'Completed' }
   ]
-
-  const initialAssignees = () => {
-    if (assignee) {
-      return teamMembers.filter(teamMember => assignee.includes(` ${teamMember.label}`))
-    } else {
-      return null
-    }
-  }
 
   const clearState = () => {
     setJobNumber('')
@@ -63,7 +47,7 @@ const JobForm = ({ formType, job, updateJobList, closeForm }) => {
       jobLink: jobLink,
       dueDate: dueDate,
       maxHours: maxHours,
-      assignee: teamMembers.filter(teamMember => assignee.includes(` ${teamMember.label}`)),
+      assignee: assignee,
       description: description,
       status: statusInArray
     }
@@ -85,10 +69,6 @@ const JobForm = ({ formType, job, updateJobList, closeForm }) => {
         closeForm()
       })
     }
-  }
-
-  const testDate = (theDate) => {
-    setDueDate(theDate)
   }
 
   return (
@@ -125,7 +105,7 @@ const JobForm = ({ formType, job, updateJobList, closeForm }) => {
                               <DatePicker
                               dateFormat="yyyy-MM-dd"
                               selected={dueDate ? new Date(dueDate) : null} 
-                              onChange={date => testDate(date)}
+                              onChange={date => setDueDate(date)}
                               className="pl-10 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600"
                               />
                               <div className="absolute left-3 top-2">
@@ -143,7 +123,7 @@ const JobForm = ({ formType, job, updateJobList, closeForm }) => {
                             <label className="leading-loose">Assignee</label>
                             <Select
                             options={teamMembers}
-                            defaultValue={initialAssignees()}
+                            defaultValue={assignee}
                             onChange={setAssignee}
                             isMulti
                             isSearchable
@@ -274,7 +254,7 @@ const App = () => {
     }
 
     return (
-      <JobForm formType={formType} job={job} updateJobList={updateJobList} closeForm={closeForm} />
+      <JobForm formType={formType} job={job} updateJobList={updateJobList} closeForm={closeForm} teamMembers={teamMembers} />
     )
   }
 
