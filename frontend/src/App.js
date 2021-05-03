@@ -179,7 +179,7 @@ const Job = ({ jobNumber, jobLink, dueDate, maxHours, assignee, description, sta
       <td className="py-3 px-6 text-left whitespace-nowrap">{dueDate.slice(0, 10)}</td>
       <td className="py-3 px-6 text-left whitespace-nowrap">{maxHours}</td>
       <td className="py-3 px-6 text-left whitespace-nowrap">{assignee}</td>
-      <td className="py-3 px-6 text-left whitespace-nowrap">{description}</td>
+      <td className="py-3 px-6 text-left break-normal max-w-sm">{description}</td>
       <td className="py-3 px-6 text-left whitespace-nowrap">{status}</td>
       <td className="border-b hover:bg-gray-100">
         <div className="flex item-center justify-center">
@@ -310,7 +310,7 @@ const App = () => {
       {showForm ? editJob(job) : null}
       {/* <Notification message={message} /> */}
       <div className="min-w-screen bg-white pt-12 flex items-center justify-center font-sans">
-          <div className="w-full pb-12 lg:w-5/6">
+          <div className="w-full pb-12 lg:w-5/6 overflow-x-auto">
               <table className="min-w-max w-full table-auto">
                 <thead className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
                   <tr>
