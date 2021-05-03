@@ -81,7 +81,7 @@ const JobForm = ({ formType, job, updateJobList, closeForm, teamMembers }) => {
                 <div className="relative bg-gray-200 px-4 py-10 bg-white mx-8 md:mx-0 shadow rounded-3xl sm:p-10">
                   <div className="max-w-md mx-auto">
                     <div className="flex items-center space-x-5">
-                      <div className="h-14 w-14 bg-yellow-200 rounded-full flex flex-shrink-0 justify-center items-center text-yellow-500 text-2xl font-mono">i</div>
+                      <div className="h-14 w-14 bg-gray-900 rounded-md flex flex-shrink-0 justify-center items-center text-white text-2xl">JL</div>
                       <div className="block pl-2 pt-2 font-semibold text-xl self-start text-gray-700">
                         <h2 className="leading-relaxed">Job</h2>
                       </div>
@@ -104,7 +104,7 @@ const JobForm = ({ formType, job, updateJobList, closeForm, teamMembers }) => {
                             <div className="relative focus-within:text-gray-600 text-gray-400">
                               <DatePicker
                               dateFormat="yyyy-MM-dd"
-                              selected={dueDate ? new Date(dueDate) : null} 
+                              selected={dueDate ? new Date(dueDate) : null}
                               onChange={date => setDueDate(date)}
                               className="pl-10 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600"
                               />
@@ -173,12 +173,12 @@ const Job = ({ jobNumber, jobLink, dueDate, maxHours, assignee, description, sta
       <td className="py-3 px-6 text-left whitespace-nowrap">{status}</td>
       <td className="border-b hover:bg-gray-100">
         <div className="flex item-center justify-center">
-          <div className="w-4 mr-2 transform hover:text-purple-500 hover:scale-110" onClick={editJob}>
+          <div className="w-4 mr-2 transform hover:text-blue-600 hover:scale-110" onClick={editJob}>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
             </svg>
           </div>
-          <div className="w-4 mr-2 transform hover:text-purple-500 hover:scale-110" onClick={deleteJob}>
+          <div className="w-4 mr-2 transform hover:text-blue-600 hover:scale-110" onClick={deleteJob}>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
             </svg>
@@ -200,7 +200,9 @@ const App = () => {
     { value: 'all', label: 'All' },
     { value: 'cedric', label: 'Cédric' },
     { value: 'dora', label: 'Dora' },
+    { value: 'kelly', label: 'Kelly' },
     { value: 'luke', label: 'Luke' },
+    { value: 'mihir', label: 'Mihir' },
     { value: 'vera', label: 'Vera' }
   ]
 
@@ -289,7 +291,7 @@ const App = () => {
           </div>
           <div className="md:flex items-center">
             <div className="flex flex-col md:flex-row md:mx-6">
-              <button className="my-1 text-sm text-gray-700 font-medium hover:text-indigo-500 md:mx-4 md:my-0" onClick={() => showAddForm()}>Add Job</button>
+              <button className="my-1 text-sm text-gray-700 font-medium hover:text-blue-600 md:mx-4 md:my-0" onClick={() => showAddForm()}>Add Job</button>
             </div>
           </div>
         </div>
