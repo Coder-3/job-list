@@ -163,9 +163,19 @@ const JobForm = ({ formType, job, updateJobList, closeForm, teamMembers }) => {
 }
 
 const Job = ({ jobNumber, jobLink, dueDate, maxHours, assignee, description, status, editJob, deleteJob }) => {
+  const jobNumberLink = () => {
+    if (jobLink) {
+      return <a className="text-blue-600 hover:text-blue-900" href={jobLink} target="_blank" rel="noreferrer">{jobNumber}</a>
+    } else {
+      return jobNumber
+    }
+  }
+
   return (
     <tr>
-      <td className="py-3 px-6 text-left whitespace-nowrap"><a className="text-blue-600 hover:text-blue-900" href={jobLink} target="_blank" rel="noreferrer">{jobNumber}</a></td>
+      <td className="py-3 px-6 text-left whitespace-nowrap">
+        {jobNumberLink()}
+      </td>
       <td className="py-3 px-6 text-left whitespace-nowrap">{dueDate.slice(0, 10)}</td>
       <td className="py-3 px-6 text-left whitespace-nowrap">{maxHours}</td>
       <td className="py-3 px-6 text-left whitespace-nowrap">{assignee}</td>
