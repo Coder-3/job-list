@@ -5,6 +5,8 @@ import Select from 'react-select'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 
+Modal.setAppElement('#root')
+
 const JobForm = ({ formType, job, updateJobList, closeForm, teamMembers }) => {
   const [jobNumber, setJobNumber] = useState(job.jobNumber)
   const [jobLink, setJobLink] = useState(job.jobLink)
@@ -76,8 +78,8 @@ const JobForm = ({ formType, job, updateJobList, closeForm, teamMembers }) => {
       <div className="job-form-container">
         <div className="job-form-backdrop">
           <div className="job-form-content">
-            <div className="pt-12 bg-white flex flex-col justify-center">
-              <div className="relative py-3 sm:max-w-xl sm:mx-auto">
+            <div className="bg-white flex flex-col justify-center">
+              <div className="relative sm:max-w-xl sm:mx-auto">
                 <div className="relative bg-gray-200 px-4 py-10 bg-white mx-8 md:mx-0 shadow rounded-3xl sm:p-10">
                   <div className="max-w-md mx-auto">
                     <div className="flex items-center space-x-5">
@@ -288,7 +290,7 @@ const App = () => {
     setFormType('edit')
     setJob(job)
     setShowForm(true)
-  }
+  }  
 
   return (
     <>
@@ -307,7 +309,25 @@ const App = () => {
         </div>
       </nav>
 
-      {showForm ? editJob(job) : null}
+      <Modal
+      isOpen={showForm}
+      onRequestClose={() => setShowForm(false)}
+      style={{
+        overlay: {
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center'
+        },
+        content: {
+          inset: 'unset',
+          padding: 0,
+          border: 'none'
+        }
+      }}
+      >
+        <JobForm formType={formType} job={job} updateJobList={updateJobList} closeForm={closeForm} teamMembers={teamMembers} />
+      </Modal>
+
       {/* <Notification message={message} /> */}
       <div className="min-w-screen bg-white pt-12 flex items-center justify-center font-sans">
           <div className="w-full pb-12 lg:w-5/6 overflow-x-auto">
