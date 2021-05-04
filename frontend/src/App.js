@@ -203,6 +203,7 @@ const App = () => {
   const [showForm, setShowForm] = useState(false)
   const [formType, setFormType] = useState('')
   const [selectedTeamMembers, setSelectedTeamMembers] = useState([{label: 'All'}])
+  const [selectedStatus, setSelectedStatus] = useState([{label: 'All'}])
 
   const teamMembers = [
     { value: 'all', label: 'All' },
@@ -212,6 +213,14 @@ const App = () => {
     { value: 'luke', label: 'Luke' },
     { value: 'mihir', label: 'Mihir' },
     { value: 'vera', label: 'Vera' }
+  ]
+
+  const statusOptions = [
+    { value: 'all', label: 'All' },
+    { value: 'toStart', label: 'To Start' },
+    { value: 'inProgress', label: 'In Progress' },
+    { value: 'blocked', label: 'Blocked' },
+    { value: 'completed', label: 'Completed' }
   ]
 
   const getJobList = () => {
@@ -229,7 +238,7 @@ const App = () => {
             description: job.description,
             status: job.status
           }
-          
+
           return jobObject
         })
 
@@ -241,14 +250,31 @@ const App = () => {
     getJobList()
   }, [])
 
-  const filterJobsByAssignee = () => {
+  const filterJobs = () => {
+    let finalJobs
+    let statusInArray = []
+
     const selectedTeamMemberValues = selectedTeamMembers.map(teamMember => ` ${teamMember.label}`)
 
-    if(selectedTeamMemberValues.includes(' All')) {
-      return jobs
+    if (selectedStatus instanceof Array) {
+      statusInArray = selectedStatus
     } else {
-      return jobs.filter(job => job.assignee.some(eachAssignee => selectedTeamMemberValues.includes(eachAssignee)))
+      statusInArray = new Array(selectedStatus)
     }
+
+    if (selectedTeamMemberValues.includes(' All')) {
+      finalJobs = jobs
+    } else {
+      finalJobs = jobs.filter(job => job.assignee.some(eachAssignee => selectedTeamMemberValues.includes(eachAssignee)))
+    }
+
+    if (statusInArray[0].label === 'All') {
+      return finalJobs
+    } else {
+      finalJobs = finalJobs.filter(job => statusInArray[0].label === job.status[0].label)
+    }
+
+    return finalJobs
   }
 
   const updateJobList = () => {
@@ -342,12 +368,18 @@ const App = () => {
                     isSearchable
                     />
                     <th>Description</th>
-                    <th>Status</th>
+                    <Select
+                    defaultValue={selectedStatus}
+                    options={statusOptions}
+                    onChange={setSelectedStatus}
+                    placeholder='Status'
+                    isSearchable
+                    />
                     <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody className="ext-gray-600 text-sm font-light">
-                  {filterJobsByAssignee().map(job => 
+                  {filterJobs().map(job => 
                     <Job
                     key={job.id}
                     jobId = {job.id}
