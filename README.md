@@ -2,6 +2,12 @@
 
 The job list web application is a digitised version of HBK's daily job list. It allows Digital Producers / Project Managers to manage jobs to be assigned to the digital team.
 
+![Job List](job-list.png)
+
+![Create Job](status.png)
+
+![Edit Job](datepicker.png)
+
 ## Features
 
 - Create, read, update, delete jobs
