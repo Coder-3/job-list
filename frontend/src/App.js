@@ -10,11 +10,11 @@ Modal.setAppElement('#root')
 const JobForm = ({ formType, job, updateJobList, closeForm, teamMembers }) => {
   const [jobNumber, setJobNumber] = useState(job.jobNumber)
   const [jobLink, setJobLink] = useState(job.jobLink)
-  const [dueDate, setDueDate] = useState(job.dueDate)
+  const [dueDate, setDueDate] = useState(job.dueDate ? job.dueDate : new Date())
   const [maxHours, setMaxHours] = useState(job.maxHours)
-  const [assignee, setAssignee] = useState(job.assignee ? teamMembers.filter(teamMember => job.assignee.includes(` ${teamMember.label}`)) : null)
+  const [assignee, setAssignee] = useState(job.assignee ? teamMembers.filter(teamMember => job.assignee.includes(` ${teamMember.label}`)) : [])
   const [description, setDescription] = useState(job.description)
-  const [selectedStatus, setSelectedStatus] = useState(job.status)
+  const [selectedStatus, setSelectedStatus] = useState(job.status ? job.status : { value: 'toStart', label: 'To Start' })
 
   const statusOptions = [
     { value: 'toStart', label: 'To Start' },
@@ -104,7 +104,7 @@ const JobForm = ({ formType, job, updateJobList, closeForm, teamMembers }) => {
                         <div className="relative focus-within:text-gray-600 text-gray-400">
                           <DatePicker
                           dateFormat="yyyy-MM-dd"
-                          selected={dueDate ? new Date(dueDate) : null}
+                          selected={dueDate}
                           onChange={date => setDueDate(date)}
                           className="pl-10 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600"
                           />
