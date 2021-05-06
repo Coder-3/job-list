@@ -44,6 +44,8 @@ const JobForm = ({ formType, job, updateJobList, closeForm, teamMembers }) => {
       statusInArray = new Array(selectedStatus)
     }
 
+    console.log(dueDate)
+
     const jobObject = {
       jobNumber: jobNumber,
       jobLink: jobLink,
@@ -58,6 +60,7 @@ const JobForm = ({ formType, job, updateJobList, closeForm, teamMembers }) => {
       jobService
       .create(jobObject)
       .then(returnedJob => {
+        console.log('returned job', returnedJob)
         clearState()
         updateJobList()
         closeForm()
@@ -167,12 +170,26 @@ const Job = ({ jobNumber, jobLink, dueDate, maxHours, assignee, description, sta
     }
   }
 
+  const approachingDeadline = () => {
+    const dateDue = new Date(dueDate)
+    const today = new Date()
+
+    const dayDifference = Math.ceil((dateDue - today) / (1000 * 60 * 60 * 24))
+
+
+    if (dayDifference > 0 && dayDifference <= 1) {
+      return 'bg-yellow-200'
+    } else if (dayDifference <= 0) {
+      return 'bg-red-200'
+    }
+  }
+
   return (
     <tr>
       <td className="py-3 px-6 text-left whitespace-nowrap">
         {jobNumberLink()}
       </td>
-      <td className="py-3 px-6 text-left whitespace-nowrap">{dueDate.slice(0, 10)}</td>
+      <td className={`py-3 px-6 text-left whitespace-nowrap ${approachingDeadline()}`}>{dueDate.slice(0, 10)}</td>
       <td className="py-3 px-6 text-left whitespace-nowrap">{maxHours}</td>
       <td className="py-3 px-6 text-left whitespace-nowrap">{assignee}</td>
       <td className="py-3 px-6 text-left break-normal max-w-sm">{description}</td>
@@ -236,7 +253,7 @@ const App = () => {
             description: job.description,
             status: job.status
           }
-
+          console.log(job.dueDate)
           return jobObject
         })
 
