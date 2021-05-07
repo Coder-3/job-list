@@ -10,7 +10,7 @@ Modal.setAppElement('#root')
 const JobForm = ({ formType, job, updateJobList, closeForm, teamMembers }) => {
   const [jobNumber, setJobNumber] = useState(job.jobNumber)
   const [jobLink, setJobLink] = useState(job.jobLink)
-  const [dueDate, setDueDate] = useState(job.dueDate ? job.dueDate : new Date())
+  const [dueDate, setDueDate] = useState(job.dueDate ? new Date(job.dueDate) : new Date())
   const [maxHours, setMaxHours] = useState(job.maxHours)
   const [assignee, setAssignee] = useState(job.assignee ? teamMembers.filter(teamMember => job.assignee.includes(` ${teamMember.label}`)) : [])
   const [description, setDescription] = useState(job.description)
@@ -44,12 +44,10 @@ const JobForm = ({ formType, job, updateJobList, closeForm, teamMembers }) => {
       statusInArray = new Array(selectedStatus)
     }
 
-    console.log(dueDate)
-
     const jobObject = {
       jobNumber: jobNumber,
       jobLink: jobLink,
-      dueDate: dueDate,
+      dueDate: new Date(dueDate),
       maxHours: maxHours,
       assignee: assignee,
       description: description,
@@ -176,7 +174,6 @@ const Job = ({ jobNumber, jobLink, dueDate, maxHours, assignee, description, sta
 
     const dayDifference = Math.ceil((dateDue - today) / (1000 * 60 * 60 * 24))
 
-
     if (dayDifference > 0 && dayDifference <= 1) {
       return 'bg-yellow-200'
     } else if (dayDifference <= 0) {
@@ -253,7 +250,7 @@ const App = () => {
             description: job.description,
             status: job.status
           }
-          console.log(job.dueDate)
+
           return jobObject
         })
 
@@ -298,15 +295,6 @@ const App = () => {
 
   const closeForm = () => {
     setShowForm(false)
-  }
-  const editJob = (job) => {
-    if (showForm === false) {
-      return null
-    }
-
-    return (
-      <JobForm formType={formType} job={job} updateJobList={updateJobList} closeForm={closeForm} teamMembers={teamMembers} />
-    )
   }
 
   const deleteJob = (id) => {
@@ -394,7 +382,7 @@ const App = () => {
                     <th>Actions</th>
                   </tr>
                 </thead>
-                <tbody className="ext-gray-600 text-sm font-light">
+                <tbody className="text-gray-600 text-sm font-light">
                   {filterJobs().map(job => 
                     <Job
                     key={job.id}
