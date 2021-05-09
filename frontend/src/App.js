@@ -58,7 +58,6 @@ const JobForm = ({ formType, job, updateJobList, closeForm, teamMembers }) => {
       jobService
       .create(jobObject)
       .then(returnedJob => {
-        console.log('returned job', returnedJob)
         clearState()
         updateJobList()
         closeForm()
@@ -169,15 +168,17 @@ const Job = ({ jobNumber, jobLink, dueDate, maxHours, assignee, description, sta
   }
 
   const approachingDeadline = () => {
-    const dateDue = new Date(dueDate)
+    const dateDue = new Date(dueDate.toString().slice(0, 15))
     const today = new Date()
 
     const dayDifference = Math.ceil((dateDue - today) / (1000 * 60 * 60 * 24))
 
-    if (dayDifference > 0 && dayDifference <= 1) {
-      return 'bg-yellow-200'
-    } else if (dayDifference <= 0) {
-      return 'bg-red-200'
+    if (dayDifference < 0) {
+      return 'text-red-600 font-bold'
+    } else if (dayDifference === 0) {
+      return 'text-yellow-600 font-semibold'
+    } else if (dayDifference === 1) {
+      return 'font-medium'
     }
   }
 
@@ -186,7 +187,7 @@ const Job = ({ jobNumber, jobLink, dueDate, maxHours, assignee, description, sta
       <td className="py-3 px-6 text-left whitespace-nowrap">
         {jobNumberLink()}
       </td>
-      <td className={`py-3 px-6 text-left whitespace-nowrap ${approachingDeadline()}`}>{dueDate.slice(0, 10)}</td>
+      <td className={`py-3 px-6 text-left whitespace-nowrap ${approachingDeadline()}`}>{dueDate.toString().slice(0, 10)}</td>
       <td className="py-3 px-6 text-left whitespace-nowrap">{maxHours}</td>
       <td className="py-3 px-6 text-left whitespace-nowrap">{assignee}</td>
       <td className="py-3 px-6 text-left break-normal max-w-sm">{description}</td>
@@ -244,7 +245,7 @@ const App = () => {
             id: job.id,
             jobNumber: job.jobNumber,
             jobLink: job.jobLink,
-            dueDate: job.dueDate,
+            dueDate: new Date(job.dueDate),
             maxHours: job.maxHours,
             assignee: job.assignee.map(eachAssignee => ` ${eachAssignee.label}`),
             description: job.description,
