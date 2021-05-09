@@ -10,7 +10,7 @@ Modal.setAppElement('#root')
 const JobForm = ({ formType, job, updateJobList, closeForm, teamMembers }) => {
   const [jobNumber, setJobNumber] = useState(job.jobNumber)
   const [jobLink, setJobLink] = useState(job.jobLink)
-  const [dueDate, setDueDate] = useState(job.dueDate ? job.dueDate : new Date())
+  const [dueDate, setDueDate] = useState(job.dueDate ? new Date(job.dueDate) : new Date())
   const [maxHours, setMaxHours] = useState(job.maxHours)
   const [assignee, setAssignee] = useState(job.assignee ? teamMembers.filter(teamMember => job.assignee.includes(` ${teamMember.label}`)) : [])
   const [description, setDescription] = useState(job.description)
@@ -47,7 +47,7 @@ const JobForm = ({ formType, job, updateJobList, closeForm, teamMembers }) => {
     const jobObject = {
       jobNumber: jobNumber,
       jobLink: jobLink,
-      dueDate: dueDate,
+      dueDate: new Date(dueDate),
       maxHours: maxHours,
       assignee: assignee,
       description: description,
@@ -167,12 +167,27 @@ const Job = ({ jobNumber, jobLink, dueDate, maxHours, assignee, description, sta
     }
   }
 
+  const approachingDeadline = () => {
+    const dateDue = new Date(dueDate.toString().slice(0, 15))
+    const today = new Date()
+
+    const dayDifference = Math.ceil((dateDue - today) / (1000 * 60 * 60 * 24))
+
+    if (dayDifference < 0) {
+      return 'text-red-600 font-bold'
+    } else if (dayDifference === 0) {
+      return 'text-yellow-600 font-semibold'
+    } else if (dayDifference === 1) {
+      return 'font-medium'
+    }
+  }
+
   return (
     <tr>
       <td className="py-3 px-6 text-left whitespace-nowrap">
         {jobNumberLink()}
       </td>
-      <td className="py-3 px-6 text-left whitespace-nowrap">{dueDate.slice(0, 10)}</td>
+      <td className={`py-3 px-6 text-left whitespace-nowrap ${approachingDeadline()}`}>{dueDate.toString().slice(0, 10)}</td>
       <td className="py-3 px-6 text-left whitespace-nowrap">{maxHours}</td>
       <td className="py-3 px-6 text-left whitespace-nowrap">{assignee}</td>
       <td className="py-3 px-6 text-left break-normal max-w-sm">{description}</td>
@@ -230,7 +245,7 @@ const App = () => {
             id: job.id,
             jobNumber: job.jobNumber,
             jobLink: job.jobLink,
-            dueDate: job.dueDate,
+            dueDate: new Date(job.dueDate),
             maxHours: job.maxHours,
             assignee: job.assignee.map(eachAssignee => ` ${eachAssignee.label}`),
             description: job.description,
@@ -281,15 +296,6 @@ const App = () => {
 
   const closeForm = () => {
     setShowForm(false)
-  }
-  const editJob = (job) => {
-    if (showForm === false) {
-      return null
-    }
-
-    return (
-      <JobForm formType={formType} job={job} updateJobList={updateJobList} closeForm={closeForm} teamMembers={teamMembers} />
-    )
   }
 
   const deleteJob = (id) => {
@@ -377,7 +383,7 @@ const App = () => {
                     <th>Actions</th>
                   </tr>
                 </thead>
-                <tbody className="ext-gray-600 text-sm font-light">
+                <tbody className="text-gray-600 text-sm font-light">
                   {filterJobs().map(job => 
                     <Job
                     key={job.id}
