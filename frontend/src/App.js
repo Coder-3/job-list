@@ -216,7 +216,11 @@ const App = () => {
   const [showForm, setShowForm] = useState(false)
   const [formType, setFormType] = useState('')
   const [selectedTeamMembers, setSelectedTeamMembers] = useState([{label: 'All'}])
-  const [selectedStatus, setSelectedStatus] = useState([{label: 'All'}])
+  const [selectedStatus, setSelectedStatus] = useState([
+    { value: 'toStart', label: 'To Start' },
+    { value: 'inProgress', label: 'In Progress' },
+    { value: 'blocked', label: 'Blocked' }
+  ])
 
   const teamMembers = [
     { value: 'all', label: 'All' },
@@ -265,15 +269,9 @@ const App = () => {
 
   const filterJobs = () => {
     let finalJobs
-    let statusInArray = []
 
     const selectedTeamMemberValues = selectedTeamMembers.map(teamMember => ` ${teamMember.label}`)
-
-    if (selectedStatus instanceof Array) {
-      statusInArray = selectedStatus
-    } else {
-      statusInArray = new Array(selectedStatus)
-    }
+    const selectedStatusValues = selectedStatus.map(status => status.label)
 
     if (selectedTeamMemberValues.includes(' All')) {
       finalJobs = jobs
@@ -281,10 +279,10 @@ const App = () => {
       finalJobs = jobs.filter(job => job.assignee.some(eachAssignee => selectedTeamMemberValues.includes(eachAssignee)))
     }
 
-    if (statusInArray[0].label === 'All') {
+    if (selectedStatusValues.includes('All')) {
       return finalJobs
     } else {
-      finalJobs = finalJobs.filter(job => statusInArray[0].label === job.status[0].label)
+      finalJobs = finalJobs.filter(job => selectedStatusValues.includes(job.status[0].label))
     }
 
     return finalJobs
@@ -379,6 +377,7 @@ const App = () => {
                     onChange={setSelectedStatus}
                     placeholder='Status'
                     isSearchable
+                    isMulti
                     />
                     <th>Actions</th>
                   </tr>
