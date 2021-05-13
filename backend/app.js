@@ -6,6 +6,7 @@ require('express-async-errors')
 const cors = require('cors')
 const peopleRouter = require('./controllers/people')
 const tasksRouter = require('./controllers/tasks')
+const emailRouter = require('./controllers/emails')
 const middleware = require('./utils/middleware')
 const logger = require('./utils/logger')
 
@@ -26,6 +27,7 @@ app.use(middleware.requestLogger)
 
 app.use('/api/people', peopleRouter)
 app.use('/api/tasks', tasksRouter)
+app.use('/api/email', emailRouter)
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)

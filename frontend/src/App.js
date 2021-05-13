@@ -4,6 +4,7 @@ import jobService from './services/jobs'
 import Select from 'react-select'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
+import axios from 'axios'
 
 Modal.setAppElement('#root')
 
@@ -314,7 +315,14 @@ const App = () => {
     setFormType('edit')
     setJob(job)
     setShowForm(true)
-  }  
+  }
+
+  const emailJobList = () => {
+    axios.post('/api/email', teamMembers)
+    .then(response => {
+      console.log(response.data)
+    })
+  }
 
   return (
     <>
@@ -327,7 +335,10 @@ const App = () => {
           </div>
           <div className="md:flex items-center">
             <div className="flex flex-col md:flex-row md:mx-6">
-              <button className="my-1 text-sm text-gray-700 font-medium hover:text-blue-600 md:mx-4 md:my-0" onClick={() => showAddForm()}>Add Job</button>
+              <button className="my-1 text-sm text-gray-700 font-medium hover:text-blue-600 md:mx-0 md:my-0" onClick={() => emailJobList()}>Email Job List</button>
+            </div>
+            <div className="flex flex-col md:flex-row md:mx-6">
+              <button className="my-1 text-sm text-gray-700 font-medium hover:text-blue-600 md:mr-2 md:my-0" onClick={() => showAddForm()}>Add Job</button>
             </div>
           </div>
         </div>
