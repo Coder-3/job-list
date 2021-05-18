@@ -318,10 +318,8 @@ const App = () => {
   }
 
   const emailJobList = () => {
-    axios.post('/api/email', teamMembers)
-    .then(response => {
-      console.log(response.data)
-    })
+    const eachTeamMember = teamMembers
+    axios.post('/api/email', eachTeamMember.splice(1, eachTeamMember.length))
   }
 
   return (
