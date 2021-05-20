@@ -4,6 +4,7 @@ import jobService from './services/jobs'
 import Select from 'react-select'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
+import axios from 'axios'
 
 Modal.setAppElement('#root')
 
@@ -213,6 +214,7 @@ const Job = ({ jobNumber, jobLink, dueDate, maxHours, assignee, description, sta
 const App = () => {
   const [jobs, setJobs] = useState([])
   const [job, setJob] = useState(null)
+  const [isEmailButtonDisabled, setIsEmailButtonDisabled] = useState(false)
   const [showForm, setShowForm] = useState(false)
   const [formType, setFormType] = useState('')
   const [selectedTeamMembers, setSelectedTeamMembers] = useState([{label: 'All'}])
@@ -314,7 +316,13 @@ const App = () => {
     setFormType('edit')
     setJob(job)
     setShowForm(true)
-  }  
+  }
+
+  const emailJobList = () => {
+    const eachTeamMember = teamMembers
+    setIsEmailButtonDisabled(true)
+    axios.post('/api/email', eachTeamMember.splice(1, eachTeamMember.length))
+  }
 
   return (
     <>
@@ -327,7 +335,10 @@ const App = () => {
           </div>
           <div className="md:flex items-center">
             <div className="flex flex-col md:flex-row md:mx-6">
-              <button className="my-1 text-sm text-gray-700 font-medium hover:text-blue-600 md:mx-4 md:my-0" onClick={() => showAddForm()}>Add Job</button>
+              <button className={`my-1 text-sm ${isEmailButtonDisabled ? 'text-gray-400 hover:text-blue-300' : 'text-gray-700 hover:text-blue-600'} font-medium md:mx-0 md:my-0`} disabled={isEmailButtonDisabled} onClick={() => emailJobList()}>Email Job List</button>
+            </div>
+            <div className="flex flex-col md:flex-row md:mx-6">
+              <button className="my-1 text-sm text-gray-700 font-medium hover:text-blue-600 md:mr-2 md:my-0" onClick={() => showAddForm()}>Add Job</button>
             </div>
           </div>
         </div>
@@ -354,8 +365,8 @@ const App = () => {
       </Modal>
 
       {/* <Notification message={message} /> */}
-      <div className="min-w-screen bg-white pt-12 overflow-y-auto flex items-center justify-center font-sans">
-          <div className="w-full pb-80 lg:w-5/6">
+      <div className="min-w-full bg-white pt-12 overflow-y-auto flex items-center justify-center font-sans">
+          <div className="w-full pb-80 mx-3 lg:w-full">
               <table className="min-w-max w-full table-auto">
                 <thead className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
                   <tr>
