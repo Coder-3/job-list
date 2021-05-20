@@ -56,7 +56,7 @@ const sendJobList = (data) => {
                     } else if (dayDifference === 1) {
                       return 'font-weight: 500;'
                     } else {
-                      return null
+                      return ''
                     }
                   }
 
@@ -81,11 +81,10 @@ const sendJobList = (data) => {
   `
 
   const msg = {
-    // to: ['cedric@hbk.com.au', 'dora@hbk.com.au', 'kelly@hbk.com.au', 'lukec@hbk.com.au', 'mihir@hbk.com.au', 'vera@hbk.com.au', 'simon@hbk.com.au', 'cynthia@hbk.com.au', 'luke@hbk.com.au'],
-    to: ['cedric@hbk.com.au', 'vera@hbk.com.au'],
+    to: ['cedric@hbk.com.au', 'dora@hbk.com.au', 'kelly@hbk.com.au', 'lukec@hbk.com.au', 'mihir@hbk.com.au', 'vera@hbk.com.au', 'simon@hbk.com.au', 'cynthia@hbk.com.au', 'luke@hbk.com.au'],
     from: {
       name: 'Job List',
-      email: 'cedric@hbk.com.au',
+      email: 'dev@hbk.com.au',
     },
     subject: `Job List: ${new Date(Date.now()).toDateString()}`,
     html: content
