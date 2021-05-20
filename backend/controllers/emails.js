@@ -77,7 +77,7 @@ const sendJobList = (data) => {
         </div>
         `
       }).join('')}
-    <a href="https://aqueous-headland-44218.herokuapp.com/">Complete job list</a>
+    <a href="https://hbk-job-list.herokuapp.com/">Complete job list</a>
   `
 
   const msg = {
