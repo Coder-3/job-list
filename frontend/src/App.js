@@ -225,7 +225,9 @@ const GifForm = ({ emailJob, show, teamMembers }) => {
         <div className="relative bg-gray-200 px-4 py-10 bg-white mx-8 md:mx-0 shadow rounded-3xl sm:p-10">
           <div className="flex items-center space-x-4">
             <div className="flex flex-col">
-              <label className="leading-loose">GIF Link</label>
+              <div className="flex flex-row">
+                <label className="leading-loose">GIF Link</label><img src={"./cool_cat.gif"} alt="" width="30px" className="mx-2 mb-1"/>
+              </div>
               <input type="text" value={gifLink} placeholder="https:// ... .gif" onChange={(event) => setGifLink(event.target.value)} className="px-9 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" />
             </div>
           </div>
