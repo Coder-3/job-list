@@ -145,10 +145,10 @@ const JobForm = ({ formType, job, updateJobList, closeForm, teamMembers }) => {
                   </div>
                 </div>
                 <div className="pt-4 flex items-center space-x-4">
-                    <button onClick={() => closeForm()} className="flex justify-center items-center w-full text-gray-900 px-4 py-3 rounded-md focus:outline-none">
-                      <svg className="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg> Cancel
-                    </button>
-                    <button onClick={handleJob} className="bg-blue-500 flex justify-center items-center w-full text-white px-4 py-3 rounded-md focus:outline-none">Submit</button>
+                  <button onClick={() => closeForm()} className="flex justify-center items-center w-full text-gray-900 px-4 py-3 rounded-md focus:outline-none">
+                    <svg className="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg> Cancel
+                  </button>
+                  <button onClick={handleJob} className="bg-blue-500 flex justify-center items-center w-full text-white px-4 py-3 rounded-md focus:outline-none">Submit</button>
                 </div>
               </div>
             </div>
@@ -211,11 +211,42 @@ const Job = ({ jobNumber, jobLink, dueDate, maxHours, assignee, description, sta
   )
 }
 
+const GifForm = ({ emailJob, show, teamMembers }) => {
+  const [gifLink, setGifLink] = useState('')
+
+  const sendEmail = () => {
+    const members = [teamMembers.splice(1, teamMembers.length), gifLink]
+    axios.post('/api/email', members)
+  }
+
+  return (
+    <div className="bg-white flex flex-col justify-center">
+      <div className="relative sm:max-w-xl sm:mx-auto">
+        <div className="relative bg-gray-200 px-4 py-10 bg-white mx-8 md:mx-0 shadow rounded-3xl sm:p-10">
+          <div className="flex items-center space-x-4">
+            <div className="flex flex-col">
+              <label className="leading-loose">GIF Link</label>
+              <input type="text" value={gifLink} placeholder="https:// ... .gif" onChange={(event) => setGifLink(event.target.value)} className="px-9 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" />
+            </div>
+          </div>
+        <div className="pt-4 flex items-center space-x-4">
+          <button onClick={() => show(false)} className="flex justify-center items-center w-full text-gray-900 px-4 py-3 rounded-md focus:outline-none">
+            <svg className="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg> Cancel
+          </button>
+          <button onClick={sendEmail} className="bg-blue-500 flex justify-center items-center w-full text-white px-4 py-3 rounded-md focus:outline-none">Submit</button>
+        </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 const App = () => {
   const [jobs, setJobs] = useState([])
   const [job, setJob] = useState(null)
   const [isEmailButtonDisabled, setIsEmailButtonDisabled] = useState(false)
   const [showForm, setShowForm] = useState(false)
+  const [showGifBox, setShowGifBox] = useState(false)
   const [formType, setFormType] = useState('')
   const [selectedTeamMembers, setSelectedTeamMembers] = useState([{label: 'All'}])
   const [selectedStatus, setSelectedStatus] = useState([
@@ -319,9 +350,8 @@ const App = () => {
   }
 
   const emailJobList = () => {
-    const eachTeamMember = teamMembers
     setIsEmailButtonDisabled(true)
-    axios.post('/api/email', eachTeamMember.splice(1, eachTeamMember.length))
+    setShowGifBox(true)
   }
 
   return (
@@ -362,6 +392,26 @@ const App = () => {
       }}
       >
         <JobForm formType={formType} job={job} updateJobList={updateJobList} closeForm={closeForm} teamMembers={teamMembers} />
+      </Modal>
+
+      <Modal
+      isOpen={showGifBox}
+      onRequestClose={() => setShowGifBox(false)}
+      style={{
+        overlay: {
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center'
+        },
+        content: {
+          inset: 'unset',
+          padding: 0,
+          overflow: 'initial',
+          border: 'none'
+        }
+      }}
+      >
+        <GifForm teamMembers={teamMembers} show={setShowGifBox} />
       </Modal>
 
       {/* <Notification message={message} /> */}

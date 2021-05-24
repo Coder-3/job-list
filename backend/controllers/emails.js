@@ -7,25 +7,24 @@ sgMail.setApiKey(config.SENDGRID_API)
 emailRouter.post('/', async (request, response) => {
   const assignees = request.body
   
-  const tasksPerAssigneePromises = assignees.map(async assignee => {
-    if(assignee.label !== 'All') {
+  const tasksPerAssigneePromises = assignees[0].map(async assignee => {
       return {
         assignee: assignee.label,
         tasks: await Task.find({ assignee: assignee })
       }
-    }
   })
 
   const tasksPerAssignee = await Promise.all(tasksPerAssigneePromises)
 
   response.json(tasksPerAssignee)
 
-  sendJobList(tasksPerAssignee)
+  sendJobList([tasksPerAssignee, assignees[1]])
 })
 
 const sendJobList = (data) => {
   const content = `
-    ${data.map(obj => {
+    <img src="${data[1]}" width="25%">
+    ${data[0].map(obj => {
       return `
         <h2>${obj.assignee}</h2>
         <div style="background-color: white; padding-top: 0.5rem; display: flex; align-items: center; justify-content: center;">
